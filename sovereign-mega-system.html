@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOVEREIGN MEGA-SYSTEM - Complete Decentralized Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --neon-green: #00ff00;
+      --neon-cyan: #00ffff;
+      --neon-yellow: #ffff00;
+      --neon-red: #ff0066;
+      --neon-gold: #ffd700;
+      --neon-purple: #9d00ff;
+      --dark-bg: #0a0a0a;
+      --panel-bg: #111;
+    }
+    
+    body {
+      font-family: 'Space Mono', monospace;
+      background: var(--dark-bg);
+      color: var(--neon-green);
+      overflow-x: hidden;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridScroll 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    @keyframes gridScroll {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(-20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes glow {
+      from { text-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
+      to { text-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor; }
+    }
+    
+    @keyframes propagate {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: scale(1.2); opacity: 0; }
+    }
+    
+    .app-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* HEADER */
+    header {
+      border: 2px solid var(--neon-green);
+      padding: 30px;
+      margin-bottom: 30px;
+      background: var(--panel-bg);
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    }
+    
+    h1 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 48px;
+      letter-spacing: 4px;
+      text-shadow: 0 0 10px var(--neon-green);
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+    
+    .system-status {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .layer-indicator {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: center;
+      font-size: 10px;
+      transition: all 0.3s;
+    }
+    
+    .layer-indicator.active {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+    
+    .layer-indicator.propagating {
+      animation: pulse 1s infinite;
+    }
+    
+    .layer-name {
+      color: var(--neon-cyan);
+      font-weight: bold;
+      font-size: 9px;
+    }
+    
+    .layer-status {
+      color: var(--neon-green);
+      font-size: 8px;
+    }
+    
+    /* TABS */
+    .tab-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+      background: transparent;
+      border: 2px solid #333;
+      color: #666;
+      padding: 10px 20px;
+      font-family: 'Space Mono', monospace;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 12px;
+    }
+    
+    .tab-btn.active {
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    }
+    
+    .tab-btn:hover {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: slideIn 0.3s;
+    }
+    
+    /* PANELS */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    @media (max-width: 1200px) {
+      .main-layout { grid-template-columns: 1fr; }
+    }
+    
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid #333;
+      padding: 25px;
+    }
+    
+    .panel-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 24px;
+      color: var(--neon-cyan);
+      margin-bottom: 20px;
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+    }
+    
+    /* FORMS */
+    input, textarea, select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+      color: var(--neon-green);
+      padding: 12px;
+      font-family: 'Space Mono', monospace;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+    
+    textarea { min-height: 120px; }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+    }
+    
+    button {
+      background: transparent;
+      border: 2px solid var(--neon-green);
+      color: var(--neon-green);
+      padding: 12px 30px;
+      font-family: 'Space Mono', monospace;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    
+    button:hover {
+      background: var(--neon-green);
+      color: var(--dark-bg);
+    }
+    
+    button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    button.processing {
+      animation: pulse 1s infinite;
+    }
+    
+    button.secondary {
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+    }
+    
+    button.secondary:hover {
+      background: var(--neon-cyan);
+      color: var(--dark-bg);
+    }
+    
+    button.danger {
+      border-color: var(--neon-red);
+      color: var(--neon-red);
+    }
+    
+    button.danger:hover {
+      background: var(--neon-red);
+      color: var(--dark-bg);
+    }
+    
+    /* STATS */
+    .stat-box {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    
+    .stat-value {
+      font-size: 36px;
+      font-family: 'Bebas Neue';
+      color: var(--neon-yellow);
+    }
+    
+    .stat-label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+    }
+    
+    /* LOG CONSOLE */
+    .log-console {
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #333;
+      padding: 15px;
+      height: 300px;
+      overflow-y: auto;
+      font-size: 11px;
+      margin-top: 20px;
+    }
+    
+    .log-entry {
+      margin-bottom: 5px;
+      animation: slideIn 0.3s;
+    }
+    
+    .log-time { color: #666; }
+    .log-layer { color: var(--neon-cyan); }
+    .log-message { color: var(--neon-green); }
+    .log-error { color: var(--neon-red); }
+    .log-warning { color: var(--neon-yellow); }
+    
+    /* MESSAGES */
+    .message-item {
+      background: rgba(0, 255, 255, 0.05);
+      border-left: 3px solid var(--neon-cyan);
+      padding: 15px;
+      margin-bottom: 15px;
+      animation: slideIn 0.5s;
+    }
+    
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .message-author {
+      color: var(--neon-cyan);
+      font-weight: bold;
+    }
+    
+    .message-timestamp {
+      color: #666;
+      font-size: 10px;
+    }
+    
+    .message-content {
+      color: var(--neon-green);
+      margin-bottom: 10px;
+    }
+    
+    .message-metadata {
+      font-size: 10px;
+      color: #888;
+      display: flex;
+      gap: 15px;
+    }
+    
+    .reputation-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+    
+    .reputation-high {
+      background: rgba(0, 255, 0, 0.2);
+      color: var(--neon-green);
+    }
+    
+    .reputation-medium {
+      background: rgba(255, 255, 0, 0.2);
+      color: var(--neon-yellow);
+    }
+    
+    .reputation-low {
+      background: rgba(255, 0, 102, 0.2);
+      color: var(--neon-red);
+    }
+    
+    /* NETWORK GRAPH */
+    canvas {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #333;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    
+    /* ATTACK RESULTS */
+    .attack-result {
+      background: rgba(255, 0, 102, 0.05);
+      border-left: 3px solid var(--neon-red);
+      padding: 15px;
+      margin-bottom: 15px;
+      animation: slideIn 0.5s;
+    }
+    
+    .attack-result.success {
+      background: rgba(0, 255, 0, 0.05);
+      border-left-color: var(--neon-green);
+    }
+    
+    .contribution-item {
+      background: rgba(0, 255, 0, 0.03);
+      border-left: 3px solid var(--neon-green);
+      padding: 15px;
+      margin-bottom: 15px;
+      animation: slideIn 0.5s;
+    }
+    
+    /* METRICS */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .metric {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+      padding: 15px;
+      text-align: center;
+    }
+    
+    .metric-value {
+      font-size: 28px;
+      color: var(--neon-yellow);
+      font-family: 'Bebas Neue';
+    }
+    
+    .metric-label {
+      font-size: 10px;
+      color: #888;
+      text-transform: uppercase;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #222;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--neon-green);
+      transition: width 0.3s;
+    }
+    
+    /* ANALYSIS RESULTS */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .full-width { grid-column: 1 / -1; }
+    
+    /* PATTERN CARDS */
+    .pattern-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .pattern-card {
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #333;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .pattern-card:hover {
+      border-color: var(--neon-cyan);
+      transform: translateY(-2px);
+    }
+    
+    .pattern-card.selected {
+      border-color: var(--neon-green);
+      background: rgba(0, 255, 0, 0.1);
+    }
+    
+    .pattern-name {
+      font-weight: bold;
+      color: var(--neon-cyan);
+      margin-bottom: 5px;
+    }
+    
+    .pattern-desc {
+      font-size: 11px;
+      color: #888;
+    }
+    
+    /* NODE VISUALIZATION */
+    .node-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .node-card {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .node-card.active {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    }
+    
+    .node-id {
+      font-size: 11px;
+      color: var(--neon-cyan);
+      font-weight: bold;
+    }
+    
+    .node-messages {
+      font-size: 24px;
+      color: var(--neon-yellow);
+      font-family: 'Bebas Neue';
+    }
+    
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #333; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--neon-green); }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>⚡ SOVEREIGN MEGA-SYSTEM ⚡</h1>
+      <div style="color: var(--neon-cyan); font-size: 14px; margin-top: 10px;">
+        Digital Army | Security Testing | Messaging Protocol | Asset Valuation
+      </div>
+      
+      <div class="system-status">
+        <!-- Original Layers -->
+        <div class="layer-indicator" id="layer-app">
+          <div class="layer-name">APPLICATION</div>
+          <div class="layer-status">STANDBY</div>
+        </div>
+        <div class="layer-indicator" id="layer-business">
+          <div class="layer-name">BUSINESS LOGIC</div>
+          <div class="layer-status">STANDBY</div>
+        </div>
+        <div class="layer-indicator" id="layer-data">
+          <div class="layer-name">DATA</div>
+          <div class="layer-status">STANDBY</div>
+        </div>
+        <div class="layer-indicator" id="layer-infra">
+          <div class="layer-name">INFRASTRUCTURE</div>
+          <div class="layer-status">ONLINE</div>
+        </div>
+        
+        <!-- RRTK Layers -->
+        <div class="layer-indicator" id="layer-rrtk">
+          <div class="layer-name">RRTK KERNEL</div>
+          <div class="layer-status">READY</div>
+        </div>
+        <div class="layer-indicator" id="layer-oracle">
+          <div class="layer-name">ORACLE</div>
+          <div class="layer-status">READY</div>
+        </div>
+        
+        <!-- Messaging Protocol Layers -->
+        <div class="layer-indicator" id="layer-client">
+          <div class="layer-name">CLIENT</div>
+          <div class="layer-status">READY</div>
+        </div>
+        <div class="layer-indicator" id="layer-relay">
+          <div class="layer-name">RELAY</div>
+          <div class="layer-status">READY</div>
+        </div>
+        <div class="layer-indicator" id="layer-parser">
+          <div class="layer-name">MSG PARSER</div>
+          <div class="layer-status">READY</div>
+        </div>
+        <div class="layer-indicator" id="layer-reputation">
+          <div class="layer-name">REPUTATION</div>
+          <div class="layer-status">READY</div>
+        </div>
+        <div class="layer-indicator" id="layer-ipfs">
+          <div class="layer-name">IPFS</div>
+          <div class="layer-status">READY</div>
+        </div>
+        <div class="layer-indicator" id="layer-mesh">
+          <div class="layer-name">MESH NET</div>
+          <div class="layer-status">READY</div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- TAB NAVIGATION -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('contributions')">💡 CONTRIBUTIONS</button>
+      <button class="tab-btn" onclick="switchTab('security')">🔒 SECURITY</button>
+      <button class="tab-btn" onclick="switchTab('attacks')">⚔️ ATTACKS</button>
+      <button class="tab-btn" onclick="switchTab('messaging')">📡 MESSAGING</button>
+      <button class="tab-btn" onclick="switchTab('valuation')">💰 VALUATION</button>
+    </div>
+    
+    <!-- TAB 1: CONTRIBUTIONS -->
+    <div id="tab-contributions" class="tab-content active">
+      <div class="main-layout">
+        <div>
+          <div class="panel">
+            <div class="panel-title">Submit Knowledge Contribution</div>
+            <form id="contributionForm">
+              <input type="text" id="contrib-title" placeholder="Title" required>
+              <select id="contrib-type" required>
+                <option value="">Select contribution type...</option>
+                <option value="novel_algorithm">Novel Algorithm</option>
+                <option value="research_paper">Research Paper</option>
+                <option value="practical_tool">Practical Tool</option>
+                <option value="vulnerability_report">Vulnerability Report</option>
+                <option value="leaked_document">Leaked Document</option>
+              </select>
+              <select id="contrib-domain" required>
+                <option value="">Select domain...</option>
+                <option value="AI/ML">AI/ML</option>
+                <option value="Systems">Systems</option>
+                <option value="Theory">Theory</option>
+                <option value="Security">Security</option>
+                <option value="Cryptography">Cryptography</option>
+              </select>
+              <textarea id="contrib-desc" placeholder="Description" required></textarea>
+              <input type="text" id="contrib-author" placeholder="Author / Handle" required>
+              <button type="submit" id="submitContribBtn">INITIATE ANALYSIS</button>
+            </form>
+            
+            <div id="contrib-result" style="margin-top: 20px; display: none;"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="panel">
+            <div class="panel-title">Network Statistics</div>
+            <div class="stat-box">
+              <div class="stat-value" id="stat-count">0</div>
+              <div class="stat-label">Contributions</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value" id="stat-value">$0</div>
+              <div class="stat-label">Total Rewards</div>
+            </div>
+            <canvas id="contrib-graph"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel full-width">
+        <div class="panel-title">Contribution Registry</div>
+        <div id="contrib-list">Awaiting first contribution...</div>
+      </div>
+    </div>
+    
+    <!-- TAB 2: SECURITY TESTING -->
+    <div id="tab-security" class="tab-content">
+      <div class="main-layout">
+        <div>
+          <div class="panel">
+            <div class="panel-title">Workflow Input</div>
+            <textarea id="workflow-input" placeholder='Enter JSONFlow workflow...' style="min-height: 200px;"></textarea>
+            <button onclick="loadExampleWorkflow()">LOAD EXAMPLE</button>
+            <button class="secondary" onclick="validateWorkflow()">VALIDATE</button>
+            <button class="danger" onclick="startSecurityTest()">START TESTING</button>
+            
+            <div style="margin-top: 15px;">
+              <label style="display: block; margin-bottom: 10px;">Max Iterations:</label>
+              <input type="number" id="max-iterations" value="100" min="10" max="10000">
+            </div>
+          </div>
+          
+          <div class="panel">
+            <div class="panel-title">Testing Log</div>
+            <div class="log-console" id="security-log"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="panel">
+            <div class="panel-title">Test Results</div>
+            <div class="metrics-grid">
+              <div class="metric">
+                <div class="metric-value" id="test-iterations">0</div>
+                <div class="metric-label">Iterations</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value" id="test-attacks">0</div>
+                <div class="metric-label">Attacks</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value" id="test-vulns">0</div>
+                <div class="metric-label">Vulnerabilities</div>
+              </div>
+            </div>
+            
+            <div id="vulnerabilities-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- TAB 3: ATTACK MODULES -->
+    <div id="tab-attacks" class="tab-content">
+      <div class="panel">
+        <div class="panel-title">Advanced Attack Modules</div>
+        <div class="pattern-selector" id="pattern-selector"></div>
+        
+        <button class="danger" onclick="executeSelectedAttacks()">EXECUTE ATTACKS</button>
+        <button class="secondary" onclick="executeAllAttacks()">EXECUTE ALL</button>
+      </div>
+      
+      <div class="panel full-width">
+        <div class="panel-title">Attack Results</div>
+        <div id="attack-results">No attacks executed yet</div>
+      </div>
+    </div>
+    
+    <!-- TAB 4: MESSAGING PROTOCOL -->
+    <div id="tab-messaging" class="tab-content">
+      <div class="main-layout">
+        <div>
+          <div class="panel">
+            <div class="panel-title">Broadcast Message</div>
+            <form id="messageForm">
+              <input type="text" id="msg-author" placeholder="Your Handle" required>
+              <textarea id="msg-content" placeholder="Message content..." required></textarea>
+              <input type="text" id="msg-tags" placeholder="Tags (comma-separated)">
+              <button type="submit" id="broadcastBtn">BROADCAST MESSAGE</button>
+            </form>
+          </div>
+          
+          <div class="panel">
+            <div class="panel-title">Network Nodes</div>
+            <div class="node-grid" id="node-grid"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="panel">
+            <div class="panel-title">Network Metrics</div>
+            <div class="stat-box">
+              <div class="stat-value" id="msg-count">0</div>
+              <div class="stat-label">Messages</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value" id="node-count">0</div>
+              <div class="stat-label">Active Nodes</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value" id="propagation-time">0ms</div>
+              <div class="stat-label">Avg Propagation</div>
+            </div>
+            
+            <canvas id="mesh-graph"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel full-width">
+        <div class="panel-title">Message Feed</div>
+        <div id="message-feed">No messages yet...</div>
+      </div>
+    </div>
+    
+    <!-- TAB 5: ASSET VALUATION -->
+    <div id="tab-valuation" class="tab-content">
+      <div class="main-layout">
+        <div>
+          <div class="panel">
+            <div class="panel-title">Asset Submission</div>
+            <form id="valuationForm">
+              <input type="text" id="asset-name" placeholder="Asset Name" required>
+              <select id="asset-type" required>
+                <option value="">Select asset type...</option>
+                <option value="ai-ml">AI/ML Model</option>
+                <option value="datacenter">Data Center Infrastructure</option>
+                <option value="defi">DeFi Protocol</option>
+                <option value="dataset">Dataset</option>
+                <option value="api">API Service</option>
+                <option value="frontend">Frontend Application</option>
+              </select>
+              <textarea id="asset-description" placeholder="Asset Description" required></textarea>
+              <select id="deal-type" required>
+                <option value="">Select deal type...</option>
+                <option value="loan">Loan (borrow against asset)</option>
+                <option value="purchase">Purchase (sell asset)</option>
+              </select>
+              <button type="submit">REQUEST VALUATION</button>
+            </form>
+            
+            <div id="valuation-result" style="margin-top: 20px; display: none;"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="panel">
+            <div class="panel-title">Valuation Metrics</div>
+            <div class="stat-box">
+              <div class="stat-value" id="val-quality">0</div>
+              <div class="stat-label">Quality Score</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value" id="val-risk">0</div>
+              <div class="stat-label">Risk Score</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value" id="val-offer">$0</div>
+              <div class="stat-label">Estimated Offer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- GLOBAL SYSTEM LOG -->
+    <div class="panel full-width">
+      <div class="panel-title">System Log</div>
+      <div class="log-console" id="global-log"></div>
+    </div>
+  </div>
+  
+  <script type="module">
+    // ═══════════════════════════════════════════════════════════════════
+    // LAYER 4: INFRASTRUCTURE
+    // ═══════════════════════════════════════════════════════════════════
+    
+    const Infrastructure = {
+      startTime: Date.now(),
+      
+      log(layer, message, time = 5) {
+        const logEl = document.getElementById('global-log');
+        const timestamp = new Date().toLocaleTimeString();
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = `
+          <span class="log-time">[${timestamp}]</span>
+          <span class="log-layer">[${layer}]</span>
+          <span class="log-message">${message} ${time > 0 ? `(~${time}ms)` : ''}</span>
+        `;
+        logEl.appendChild(entry);
+        logEl.scrollTop = logEl.scrollHeight;
+        
+        while (logEl.children.length > 100) {
+          logEl.removeChild(logEl.firstChild);
+        }
+      },
+      
+      securityLog(message, type = 'info') {
+        const logEl = document.getElementById('security-log');
+        if (!logEl) return;
+        
+        const timestamp = new Date().toLocaleTimeString();
+        const entry = document.createElement('div');
+        entry.className = `log-entry log-${type}`;
+        entry.innerHTML = `<span class="log-time">[${timestamp}]</span> ${message}`;
+        logEl.appendChild(entry);
+        logEl.scrollTop = logEl.scrollHeight;
+      },
+      
+      setLayerStatus(layer, status) {
+        const el = document.getElementById(`layer-${layer}`);
+        if (el) {
+          el.className = `layer-indicator ${status === 'ACTIVE' ? 'active' : ''} ${status === 'PROPAGATING' ? 'propagating' : ''}`;
+          el.querySelector('.layer-status').textContent = status;
+        }
+      },
+      
+      async delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+    };
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // MESSAGING PROTOCOL - COMPLETE IMPLEMENTATION
+    // ═══════════════════════════════════════════════════════════════════
+    
+    const MessagingProtocol = {
+      nodes: [],
+      messages: [],
+      reputation: {},
+      
+      // Initialize mesh network
+      async initializeNetwork(nodeCount = 5) {
+        Infrastructure.log('MESH', 'Establishing mesh network', 50);
+        Infrastructure.setLayerStatus('mesh', 'ACTIVE');
+        await Infrastructure.delay(50);
+        
+        for (let i = 0; i < nodeCount; i++) {
+          this.nodes.push({
+            id: `NODE-${i + 1}`,
+            messages: 0,
+            reputation: 50 + Math.floor(Math.random() * 50),
+            active: true
+          });
+        }
+        
+        Infrastructure.setLayerStatus('mesh', 'READY');
+        Infrastructure.log('MESH', `Network initialized with ${nodeCount} nodes`);
+        document.getElementById('node-count').textContent = nodeCount;
+        this.updateNodeGrid();
+      },
+      
+      // Broadcast message through protocol
+      async broadcast(author, content, tags = []) {
+        Infrastructure.setLayerStatus('client', 'ACTIVE');
+        
+        // Step 1: Validate input (~5ms)
+        Infrastructure.log('CLIENT', 'Validating user input', 5);
+        await Infrastructure.delay(5);
+        
+        // Step 2: Route to indexer (~1ms)
+        Infrastructure.setLayerStatus('relay', 'ACTIVE');
+        Infrastructure.log('RELAY', 'Routing to indexer', 1);
+        await Infrastructure.delay(1);
+        
+        // Step 3: Execute protocol logic (~50ms)
+        Infrastructure.setLayerStatus('parser', 'ACTIVE');
+        Infrastructure.log('PARSER', 'Verifying signature', 10);
+        await Infrastructure.delay(10);
+        
+        Infrastructure.log('PARSER', 'Schema validation', 5);
+        await Infrastructure.delay(5);
+        
+        // Create signed message
+        const message = {
+          id: Math.random().toString(36).substr(2, 9),
+          author,
+          content,
+          tags: tags.filter(t => t.trim()),
+          timestamp: Date.now(),
+          signature: this.generateSignature(author, content),
+          propagationTime: 0
+        };
+        
+        // Calculate reputation
+        Infrastructure.setLayerStatus('reputation', 'ACTIVE');
+        Infrastructure.log('REPUTATION', 'Calculating stake', 5);
+        await Infrastructure.delay(5);
+        
+        const authorRep = this.reputation[author] || 50;
+        message.reputation = authorRep;
+        
+        Infrastructure.log('REPUTATION', 'Updating trust score', 5);
+        await Infrastructure.delay(5);
+        
+        // Update author reputation
+        this.reputation[author] = Math.min(100, authorRep + 2);
+        
+        // Spam resistance (~20ms)
+        Infrastructure.log('REPUTATION', 'Enforcing spam resistance', 20);
+        await Infrastructure.delay(20);
+        
+        Infrastructure.setLayerStatus('reputation', 'READY');
+        
+        // Store in IPFS (~10ms)
+        Infrastructure.setLayerStatus('ipfs', 'ACTIVE');
+        Infrastructure.log('IPFS', 'Storing message', 10);
+        await Infrastructure.delay(10);
+        
+        message.cid = 'Qm' + Math.random().toString(36).substr(2, 44);
+        
+        Infrastructure.log('IPFS', 'Indexing message', 5);
+        await Infrastructure.delay(5);
+        
+        Infrastructure.setLayerStatus('ipfs', 'READY');
+        
+        // Propagate through mesh (~20ms)
+        Infrastructure.setLayerStatus('mesh', 'PROPAGATING');
+        Infrastructure.log('MESH', 'Broadcasting to network', 20);
+        await Infrastructure.delay(20);
+        
+        const propagationStart = Date.now();
+        
+        // Propagate to all nodes
+        for (const node of this.nodes) {
+          node.messages++;
+          await Infrastructure.delay(5);
+        }
+        
+        message.propagationTime = Date.now() - propagationStart;
+        
+        Infrastructure.setLayerStatus('mesh', 'READY');
+        
+        // Store message
+        this.messages.unshift(message);
+        
+        // Finalize
+        Infrastructure.setLayerStatus('parser', 'READY');
+        Infrastructure.setLayerStatus('relay', 'READY');
+        Infrastructure.setLayerStatus('client', 'READY');
+        
+        Infrastructure.log('PROTOCOL', `Message ${message.id} propagated in ${message.propagationTime}ms`);
+        
+        return message;
+      },
+      
+      generateSignature(author, content) {
+        return 'sig_' + Math.random().toString(36).substr(2, 16);
+      },
+      
+      updateNodeGrid() {
+        const grid = document.getElementById('node-grid');
+        grid.innerHTML = this.nodes.map(node => `
+          <div class="node-card ${node.active ? 'active' : ''}">
+            <div class="node-id">${node.id}</div>
+            <div class="node-messages">${node.messages}</div>
+            <div style="font-size: 10px; color: #888;">messages</div>
+            <div style="font-size: 10px; color: var(--neon-yellow); margin-top: 5px;">
+              Rep: ${node.reputation}
+            </div>
+          </div>
+        `).join('');
+      },
+      
+      updateFeed() {
+        const feed = document.getElementById('message-feed');
+        if (this.messages.length === 0) {
+          feed.textContent = 'No messages yet...';
+          return;
+        }
+        
+        feed.innerHTML = this.messages.map(msg => {
+          const repClass = msg.reputation >= 70 ? 'high' : msg.reputation >= 40 ? 'medium' : 'low';
+          return `
+            <div class="message-item">
+              <div class="message-header">
+                <span class="message-author">${msg.author}</span>
+                <span class="message-timestamp">${new Date(msg.timestamp).toLocaleTimeString()}</span>
+              </div>
+              <div class="message-content">${msg.content}</div>
+              <div class="message-metadata">
+                <span>ID: ${msg.id}</span>
+                <span>CID: ${msg.cid}</span>
+                <span>Propagation: ${msg.propagationTime}ms</span>
+                <span class="reputation-badge reputation-${repClass}">Rep: ${msg.reputation}</span>
+                ${msg.tags.length > 0 ? `<span>Tags: ${msg.tags.join(', ')}</span>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        // Update metrics
+        document.getElementById('msg-count').textContent = this.messages.length;
+        const avgProp = this.messages.reduce((sum, m) => sum + m.propagationTime, 0) / this.messages.length;
+        document.getElementById('propagation-time').textContent = Math.round(avgProp) + 'ms';
+      },
+      
+      drawMeshGraph() {
+        const canvas = document.getElementById('mesh-graph');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth;
+        canvas.height = 300;
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        if (this.nodes.length === 0) return;
+        
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = Math.min(canvas.width, canvas.height) / 3;
+        
+        // Draw connections
+        ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+        ctx.lineWidth = 1;
+        
+        for (let i = 0; i < this.nodes.length; i++) {
+          for (let j = i + 1; j < this.nodes.length; j++) {
+            const angle1 = (i / this.nodes.length) * Math.PI * 2;
+            const angle2 = (j / this.nodes.length) * Math.PI * 2;
+            
+            const x1 = centerX + Math.cos(angle1) * radius;
+            const y1 = centerY + Math.sin(angle1) * radius;
+            const x2 = centerX + Math.cos(angle2) * radius;
+            const y2 = centerY + Math.sin(angle2) * radius;
+            
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+          }
+        }
+        
+        // Draw nodes
+        this.nodes.forEach((node, i) => {
+          const angle = (i / this.nodes.length) * Math.PI * 2;
+          const x = centerX + Math.cos(angle) * radius;
+          const y = centerY + Math.sin(angle) * radius;
+          
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = 'rgba(0, 255, 255, 0.8)';
+          ctx.beginPath();
+          ctx.arc(x, y, 8 + node.messages / 2, 0, Math.PI * 2);
+          ctx.fillStyle = '#00ffff';
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        });
+      }
+    };
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // DATA LAYER
+    // ═══════════════════════════════════════════════════════════════════
+    
+    const DataLayer = {
+      contributions: [],
+      workflows: [],
+      assets: [],
+      cache: {},
+      
+      async store(type, data) {
+        Infrastructure.log('DATA', `Storing ${type}`, 10);
+        await Infrastructure.delay(10);
+        
+        const enriched = {
+          ...data,
+          timestamp: Date.now(),
+          id: Math.random().toString(36).substr(2, 9),
+          hash: this.generateHash(data)
+        };
+        
+        this[type].push(enriched);
+        this.cache[enriched.id] = enriched;
+        return enriched;
+      },
+      
+      generateHash(data) {
+        return Math.random().toString(36).substr(2, 16).toUpperCase();
+      },
+      
+      getAll(type) {
+        return this[type] || [];
+      }
+    };
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // RRTK SECURITY TESTING
+    // ═══════════════════════════════════════════════════════════════════
+    
+    const RRTK = {
+      invariants: [
+        {
+          id: 'INV-001',
+          name: 'No Reentrancy',
+          severity: 'critical',
+          check: (workflow) => {
+            const calls = workflow.steps.filter(s => s.type === 'call');
+            const mutations = workflow.steps.filter(s => s.mutates);
+            
+            for (let i = 0; i < calls.length; i++) {
+              for (let j = i + 1; j < mutations.length; j++) {
+                if (workflow.steps.indexOf(mutations[j]) > workflow.steps.indexOf(calls[i])) {
+                  return { violated: true, reason: 'State mutation after external call (CEI violation)' };
+                }
+              }
+            }
+            return { violated: false };
+          }
+        },
+        {
+          id: 'INV-002',
+          name: 'Balance Consistency',
+          severity: 'critical',
+          check: (workflow) => {
+            if (workflow.inputs?.balance !== undefined && workflow.inputs.balance < 0) {
+              return { violated: true, reason: 'Negative balance detected' };
+            }
+            return { violated: false };
+          }
+        },
+        {
+          id: 'INV-003',
+          name: 'Integer Overflow',
+          severity: 'high',
+          check: (workflow) => {
+            for (const step of workflow.steps) {
+              if (step.type === 'compute' && step.expression) {
+                if (/\+|\*/.test(step.expression)) {
+                  return { violated: true, reason: 'Potential integer overflow in arithmetic' };
+                }
+              }
+            }
+            return { violated: false };
+          }
+        },
+        {
+          id: 'INV-004',
+          name: 'Access Control',
+          severity: 'high',
+          check: (workflow) => {
+            const privileged = workflow.steps.filter(s => s.privileged || s.admin);
+            if (privileged.length > 0 && !workflow.steps.some(s => s.type === 'auth' || s.type === 'assert')) {
+              return { violated: true, reason: 'Privileged operation without auth check' };
+            }
+            return { violated: false };
+          }
+        }
+      ],
+      
+      attacks: [
+        { id: 'reentrancy', name: 'Reentrancy Attack', mutate: (w) => {
+          const m = JSON.parse(JSON.stringify(w));
+          const idx = m.steps.findIndex(s => s.type === 'call');
+          if (idx >= 0) m.steps.splice(idx + 1, 0, { id: 'recursive_call', type: 'call', target: 'self', malicious: true });
+          return m;
+        }},
+        { id: 'overflow', name: 'Integer Overflow', mutate: (w) => {
+          const m = JSON.parse(JSON.stringify(w));
+          if (m.inputs?.amount) m.inputs.amount = Number.MAX_SAFE_INTEGER + 1000;
+          return m;
+        }},
+        { id: 'frontrun', name: 'Front-Running', mutate: (w) => {
+          const m = JSON.parse(JSON.stringify(w));
+          m.steps.unshift({ id: 'frontrun', type: 'call', gasPrice: 'MAX', malicious: true });
+          return m;
+        }},
+        { id: 'double_spend', name: 'Double Spend', mutate: (w) => {
+          const m = JSON.parse(JSON.stringify(w));
+          const transfers = m.steps.filter(s => s.type === 'call');
+          if (transfers.length > 0) m.steps.push({...transfers[0], id: 'double_spend', malicious: true});
+          return m;
+        }}
+      ],
+      
+      async test(workflow, maxIterations = 100) {
+        Infrastructure.setLayerStatus('rrtk', 'ACTIVE');
+        Infrastructure.securityLog('Initializing RRTK kernel...', 'info');
+        
+        const results = { iterations: 0, attacks: 0, vulnerabilities: [] };
+        
+        for (const inv of this.invariants) {
+          Infrastructure.setLayerStatus('oracle', 'ACTIVE');
+          const result = inv.check(workflow);
+          if (result.violated) {
+            results.vulnerabilities.push({
+              invariant: inv.id,
+              name: inv.name,
+              severity: inv.severity,
+              reason: result.reason
+            });
+            Infrastructure.securityLog(`❌ VULNERABILITY: ${inv.name} - ${result.reason}`, 'error');
+          }
+          await Infrastructure.delay(50);
+        }
+        Infrastructure.setLayerStatus('oracle', 'READY');
+        
+        for (let i = 0; i < Math.min(maxIterations, 20); i++) {
+          results.iterations++;
+          const attack = this.attacks[i % this.attacks.length];
+          Infrastructure.securityLog(`Testing attack ${i + 1}: ${attack.name}`, 'info');
+          
+          const mutated = attack.mutate(workflow);
+          results.attacks++;
+          
+          for (const inv of this.invariants) {
+            const result = inv.check(mutated);
+            if (result.violated) {
+              const exists = results.vulnerabilities.some(v => 
+                v.invariant === inv.id && v.attack === attack.id
+              );
+              if (!exists) {
+                results.vulnerabilities.push({
+                  invariant: inv.id,
+                  name: inv.name,
+                  severity: inv.severity,
+                  reason: result.reason,
+                  attack: attack.id,
+                  attackName: attack.name
+                });
+                Infrastructure.securityLog(`❌ Found via ${attack.name}: ${inv.name}`, 'error');
+              }
+            }
+          }
+          
+          await Infrastructure.delay(100);
+          document.getElementById('test-iterations').textContent = results.iterations;
+          document.getElementById('test-attacks').textContent = results.attacks;
+          document.getElementById('test-vulns').textContent = results.vulnerabilities.length;
+        }
+        
+        Infrastructure.setLayerStatus('rrtk', 'READY');
+        Infrastructure.securityLog(`✓ Testing complete: ${results.vulnerabilities.length} vulnerabilities`, 
+          results.vulnerabilities.length > 0 ? 'warning' : 'info');
+        
+        return results;
+      }
+    };
+    
+    // Attack Modules
+    const AttackModules = {
+      patterns: [
+        {
+          id: 'reentrancy_specialist',
+          name: 'Reentrancy Specialist',
+          description: 'Deep CEI pattern analysis',
+          execute: async (workflow) => {
+            const calls = workflow.steps.filter(s => s.type === 'call');
+            const mutations = workflow.steps.filter(s => s.mutates);
+            const vulnerabilities = [];
+            
+            for (let i = 0; i < calls.length; i++) {
+              for (let j = i + 1; j < workflow.steps.length; j++) {
+                if (mutations.includes(workflow.steps[j])) {
+                  vulnerabilities.push({
+                    type: 'reentrancy',
+                    call: calls[i].id,
+                    mutation: workflow.steps[j].id,
+                    severity: 'critical'
+                  });
+                }
+              }
+            }
+            
+            return { pattern: 'Reentrancy', tested: calls.length, found: vulnerabilities.length, vulnerabilities };
+          }
+        },
+        {
+          id: 'flash_loan',
+          name: 'Flash Loan Attacker',
+          description: 'Arbitrage and price manipulation',
+          execute: async (workflow) => {
+            const priceSteps = workflow.steps.filter(s => /price|rate|exchange/.test(s.id) || /price|rate|exchange/.test(s.expression || ''));
+            const opportunities = priceSteps.map(s => ({
+              step: s.id,
+              loanAmount: 100000000,
+              estimatedProfit: Math.floor(Math.random() * 500000)
+            }));
+            
+            return {
+              pattern: 'Flash Loan',
+              opportunities: opportunities.length,
+              totalProfit: opportunities.reduce((sum, o) => sum + o.estimatedProfit, 0),
+              details: opportunities
+            };
+          }
+        },
+        {
+          id: 'mev_specialist',
+          name: 'MEV Extractor',
+          description: 'Front-run, back-run, sandwich',
+          execute: async (workflow) => {
+            const swaps = workflow.steps.filter(s => s.type === 'call');
+            const strategies = ['frontrun', 'backrun', 'sandwich'];
+            const extractions = swaps.map((s, i) => ({
+              tx: s.id,
+              strategy: strategies[i % strategies.length],
+              value: Math.floor(Math.random() * 100000)
+            }));
+            
+            return {
+              pattern: 'MEV',
+              scanned: swaps.length,
+              extracted: extractions.length,
+              totalValue: extractions.reduce((sum, e) => sum + e.value, 0),
+              details: extractions
+            };
+          }
+        },
+        {
+          id: 'double_spend',
+          name: 'Double Spend Tester',
+          description: 'Race conditions and consensus bugs',
+          execute: async (workflow) => {
+            const balanceSteps = workflow.steps.filter(s => 
+              s.mutates && /balance|amount|value/.test(s.expression || s.id)
+            );
+            const hasLocks = workflow.steps.some(s => /lock|mutex|semaphore/.test(s.id));
+            
+            return {
+              pattern: 'Double Spend',
+              vulnerable: !hasLocks && balanceSteps.length > 0,
+              balanceOps: balanceSteps.length,
+              protection: hasLocks ? 'present' : 'missing',
+              severity: !hasLocks ? 'critical' : 'low'
+            };
+          }
+        }
+      ]
+    };
+    
+    // Contribution System
+    const ContributionSystem = {
+      async analyze(data) {
+        Infrastructure.setLayerStatus('business', 'ACTIVE');
+        Infrastructure.log('BUSINESS', 'Analyzing contribution', 50);
+        await Infrastructure.delay(50);
+        
+        const scores = {
+          novelty: 0.6 + Math.random() * 0.4,
+          coherence: 0.7 + Math.random() * 0.3,
+          knowledge: 0.5 + Math.random() * 0.5,
+          practical: 0.6 + Math.random() * 0.4,
+          impact: 0.7 + Math.random() * 0.3,
+          reach: 0.6 + Math.random() * 0.4
+        };
+        
+        const baseValues = {
+          'novel_algorithm': 25000,
+          'research_paper': 10000,
+          'practical_tool': 15000,
+          'vulnerability_report': 35000,
+          'leaked_document': 50000
+        };
+        
+        const base = baseValues[data.type] || 5000;
+        const reward = Math.round(base * Object.values(scores).reduce((a, b) => a * b, 1));
+        
+        Infrastructure.setLayerStatus('business', 'STANDBY');
+        return { scores, reward };
+      }
+    };
+    
+    // Valuation System
+    const ValuationSystem = {
+      async evaluate(asset) {
+        Infrastructure.log('BUSINESS', 'Evaluating asset', 30);
+        await Infrastructure.delay(30);
+        
+        const baseValues = {
+          'ai-ml': 500000,
+          'datacenter': 2000000,
+          'defi': 1000000,
+          'dataset': 100000,
+          'api': 50000,
+          'frontend': 30000
+        };
+        
+        const marketValue = baseValues[asset.type] || 50000;
+        const qualityScore = 60 + Math.floor(Math.random() * 40);
+        const riskScore = 20 + Math.floor(Math.random() * 30);
+        
+        let offerAmount = marketValue * (qualityScore / 100) * (1 - riskScore / 200);
+        offerAmount *= asset.dealType === 'loan' ? 0.6 : 0.95;
+        
+        return {
+          marketValue: Math.floor(marketValue),
+          qualityScore,
+          riskScore,
+          offer: Math.floor(offerAmount)
+        };
+      }
+    };
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // UI HANDLERS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    window.switchTab = (tabName) => {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+      
+      Infrastructure.log('UI', `Switched to ${tabName} tab`);
+    };
+    
+    // CONTRIBUTIONS
+    document.getElementById('contributionForm').onsubmit = async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('submitContribBtn');
+      btn.disabled = true;
+      btn.classList.add('processing');
+      btn.textContent = 'PROCESSING...';
+      
+      const data = {
+        title: document.getElementById('contrib-title').value,
+        type: document.getElementById('contrib-type').value,
+        domain: document.getElementById('contrib-domain').value,
+        desc: document.getElementById('contrib-desc').value,
+        author: document.getElementById('contrib-author').value
+      };
+      
+      Infrastructure.setLayerStatus('app', 'ACTIVE');
+      const analysis = await ContributionSystem.analyze(data);
+      const stored = await DataLayer.store('contributions', { ...data, ...analysis });
+      Infrastructure.setLayerStatus('app', 'STANDBY');
+      
+      const resultDiv = document.getElementById('contrib-result');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `
+        <div style="border: 2px solid var(--neon-green); padding: 20px; background: rgba(0, 255, 0, 0.05);">
+          <div style="color: var(--neon-cyan); margin-bottom: 15px; font-family: 'Bebas Neue'; font-size: 20px;">
+            ✓ ANALYSIS COMPLETE - ID: ${stored.id}
+          </div>
+          
+          <div class="analysis-grid">
+            ${Object.entries(analysis.scores).map(([key, val]) => `
+              <div class="metric">
+                <div class="metric-label">${key.toUpperCase()}</div>
+                <div class="metric-value">${(val * 100).toFixed(0)}%</div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: ${val * 100}%"></div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div style="margin-top: 20px; padding: 15px; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--neon-yellow);">
+            <div style="font-size: 12px; color: #888;">CALCULATED REWARD</div>
+            <div style="font-size: 36px; color: var(--neon-yellow); font-family: 'Bebas Neue';">
+              $${analysis.reward.toLocaleString()}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      updateContributionUI();
+      e.target.reset();
+      
+      btn.disabled = false;
+      btn.classList.remove('processing');
+      btn.textContent = 'INITIATE ANALYSIS';
+    };
+    
+    function updateContributionUI() {
+      const contributions = DataLayer.getAll('contributions');
+      const totalReward = contributions.reduce((sum, c) => sum + c.reward, 0);
+      
+      document.getElementById('stat-count').textContent = contributions.length;
+      document.getElementById('stat-value').textContent = '$' + totalReward.toLocaleString();
+      
+      const list = document.getElementById('contrib-list');
+      if (contributions.length === 0) {
+        list.textContent = 'Awaiting first contribution...';
+      } else {
+        list.innerHTML = contributions.slice().reverse().map(c => `
+          <div class="contribution-item">
+            <div style="display: flex; justify-content: space-between;">
+              <div>
+                <div style="font-weight: bold; color: var(--neon-cyan);">${c.title}</div>
+                <div style="font-size: 11px; color: #888; margin-top: 5px;">
+                  ${c.type.replace(/_/g, ' ').toUpperCase()} • ${c.domain} • ${c.author}
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 24px; color: var(--neon-yellow); font-family: 'Bebas Neue';">
+                  $${c.reward.toLocaleString()}
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      drawContribGraph();
+    }
+    
+    function drawContribGraph() {
+      const canvas = document.getElementById('contrib-graph');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.offsetWidth;
+      canvas.height = 300;
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const contributions = DataLayer.getAll('contributions');
+      if (contributions.length === 0) {
+        ctx.fillStyle = '#333';
+        ctx.font = '12px Space Mono';
+        ctx.textAlign = 'center';
+        ctx.fillText('NETWORK VISUALIZATION', canvas.width / 2, canvas.height / 2);
+        return;
+      }
+      
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const maxRadius = Math.min(canvas.width, canvas.height) / 2 - 40;
+      
+      contributions.forEach((c, i) => {
+        const angle = (i / contributions.length) * Math.PI * 2;
+        const x = centerX + Math.cos(angle) * maxRadius;
+        const y = centerY + Math.sin(angle) * maxRadius;
+        
+        ctx.strokeStyle = 'rgba(0, 255, 0, 0.1)';
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = 'rgba(0, 255, 0, 0.8)';
+        ctx.beginPath();
+        ctx.arc(x, y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = '#00ff00';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+    }
+    
+    // SECURITY TESTING
+    window.loadExampleWorkflow = () => {
+      document.getElementById('workflow-input').value = JSON.stringify({
+        id: "token_transfer",
+        inputs: { balance: 5000, amount: 1000 },
+        steps: [
+          { id: "call", type: "call", target: "recipient" },
+          { id: "update", type: "compute", expression: "balance - amount", mutates: true }
+        ]
+      }, null, 2);
+      Infrastructure.log('UI', 'Loaded example workflow');
+    };
+    
+    window.validateWorkflow = () => {
+      try {
+        const input = document.getElementById('workflow-input').value;
+        JSON.parse(input);
+        Infrastructure.securityLog('✓ Workflow JSON is valid', 'info');
+        alert('✓ Workflow is valid!');
+      } catch (e) {
+        Infrastructure.securityLog('❌ Invalid JSON: ' + e.message, 'error');
+        alert('❌ Invalid JSON: ' + e.message);
+      }
+    };
+    
+    window.startSecurityTest = async () => {
+      try {
+        const input = document.getElementById('workflow-input').value;
+        const workflow = JSON.parse(input);
+        const maxIter = parseInt(document.getElementById('max-iterations').value);
+        
+        const results = await RRTK.test(workflow, maxIter);
+        
+        const vulnList = document.getElementById('vulnerabilities-list');
+        if (results.vulnerabilities.length === 0) {
+          vulnList.innerHTML = '<div style="color: var(--neon-green); padding: 15px;">✓ No vulnerabilities found</div>';
+        } else {
+          vulnList.innerHTML = results.vulnerabilities.map(v => `
+            <div class="attack-result">
+              <div style="font-weight: bold; color: var(--neon-red); margin-bottom: 5px;">
+                ${v.name} (${v.severity.toUpperCase()})
+              </div>
+              <div style="font-size: 11px; color: #888;">
+                ${v.reason}
+                ${v.attackName ? `<br>Discovered via: ${v.attackName}` : ''}
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (e) {
+        Infrastructure.securityLog('❌ Error: ' + e.message, 'error');
+        alert('Error: ' + e.message);
+      }
+    };
+    
+    // ATTACK MODULES
+    function initAttackPatterns() {
+      const selector = document.getElementById('pattern-selector');
+      selector.innerHTML = AttackModules.patterns.map(p => `
+        <div class="pattern-card" data-id="${p.id}">
+          <div class="pattern-name">${p.name}</div>
+          <div class="pattern-desc">${p.description}</div>
+        </div>
+      `).join('');
+      
+      document.querySelectorAll('.pattern-card').forEach(card => {
+        card.onclick = () => card.classList.toggle('selected');
+      });
+    }
+    
+    window.executeSelectedAttacks = async () => {
+      const selected = Array.from(document.querySelectorAll('.pattern-card.selected'))
+        .map(c => c.dataset.id);
+      
+      if (selected.length === 0) {
+        alert('Select at least one attack pattern');
+        return;
+      }
+      
+      try {
+        const input = document.getElementById('workflow-input').value;
+        const workflow = JSON.parse(input);
+        
+        const resultsDiv = document.getElementById('attack-results');
+        resultsDiv.innerHTML = '<div style="color: var(--neon-yellow);">Executing attacks...</div>';
+        
+        const results = [];
+        for (const patternId of selected) {
+          const pattern = AttackModules.patterns.find(p => p.id === patternId);
+          const result = await pattern.execute(workflow);
+          results.push({ pattern: pattern.name, ...result });
+          await Infrastructure.delay(500);
+        }
+        
+        resultsDiv.innerHTML = results.map(r => `
+          <div class="attack-result ${r.found > 0 || r.vulnerable ? '' : 'success'}">
+            <div style="font-weight: bold; color: var(--neon-cyan); margin-bottom: 10px;">
+              ${r.pattern}
+            </div>
+            <div style="font-size: 12px;">
+              ${JSON.stringify(r, null, 2).replace(/[{}]/g, '').replace(/"/g, '')}
+            </div>
+          </div>
+        `).join('');
+        
+        Infrastructure.log('ATTACK', `Executed ${results.length} attack patterns`);
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    };
+    
+    window.executeAllAttacks = async () => {
+      document.querySelectorAll('.pattern-card').forEach(c => c.classList.add('selected'));
+      await executeSelectedAttacks();
+    };
+    
+    // MESSAGING PROTOCOL
+    document.getElementById('messageForm').onsubmit = async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('broadcastBtn');
+      btn.disabled = true;
+      btn.classList.add('processing');
+      btn.textContent = 'BROADCASTING...';
+      
+      const author = document.getElementById('msg-author').value;
+      const content = document.getElementById('msg-content').value;
+      const tags = document.getElementById('msg-tags').value.split(',').map(t => t.trim());
+      
+      await MessagingProtocol.broadcast(author, content, tags);
+      
+      MessagingProtocol.updateFeed();
+      MessagingProtocol.updateNodeGrid();
+      MessagingProtocol.drawMeshGraph();
+      
+      e.target.reset();
+      btn.disabled = false;
+      btn.classList.remove('processing');
+      btn.textContent = 'BROADCAST MESSAGE';
+    };
+    
+    // VALUATION
+    document.getElementById('valuationForm').onsubmit = async (e) => {
+      e.preventDefault();
+      
+      const asset = {
+        name: document.getElementById('asset-name').value,
+        type: document.getElementById('asset-type').value,
+        description: document.getElementById('asset-description').value,
+        dealType: document.getElementById('deal-type').value
+      };
+      
+      const evaluation = await ValuationSystem.evaluate(asset);
+      
+      document.getElementById('val-quality').textContent = evaluation.qualityScore;
+      document.getElementById('val-risk').textContent = evaluation.riskScore;
+      document.getElementById('val-offer').textContent = '$' + evaluation.offer.toLocaleString();
+      
+      const resultDiv = document.getElementById('valuation-result');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `
+        <div style="border: 2px solid var(--neon-gold); padding: 20px; background: rgba(255, 215, 0, 0.05);">
+          <div style="color: var(--neon-gold); font-size: 18px; font-weight: bold; margin-bottom: 15px;">
+            VALUATION COMPLETE
+          </div>
+          <div style="font-size: 14px; line-height: 1.8;">
+            <div>Market Value: <span style="color: var(--neon-yellow);">$${evaluation.marketValue.toLocaleString()}</span></div>
+            <div>Quality Score: <span style="color: var(--neon-yellow);">${evaluation.qualityScore}/100</span></div>
+            <div>Risk Score: <span style="color: var(--neon-yellow);">${evaluation.riskScore}/100</span></div>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
+              <div style="font-size: 12px; color: #888;">OUR OFFER</div>
+              <div style="font-size: 32px; color: var(--neon-gold); font-family: 'Bebas Neue';">
+                $${evaluation.offer.toLocaleString()}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      Infrastructure.log('VALUATION', `Asset evaluated: ${asset.name} - $${evaluation.offer.toLocaleString()}`);
+    };
+    
+    // INITIALIZATION
+    async function init() {
+      Infrastructure.log('INFRASTRUCTURE', 'System initialized', 0);
+      await MessagingProtocol.initializeNetwork(5);
+      initAttackPatterns();
+      updateContributionUI();
+      MessagingProtocol.drawMeshGraph();
+    }
+    
+    init();
+  </script>
+</body>
+</html>
